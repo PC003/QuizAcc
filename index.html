@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuizMaster Pro - CAT 1, CAT 2 & CAT 3 Quiz Platform</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+  <div class="app-container">
+    <!-- Header Navigation -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">QuizMaster<span class="brand-accent">.</span></span>
+            <span class="brand-subtitle">CAT 1 • CAT 2 • CAT 3 MCQs (700 Questions)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <!-- CAT Section Pills -->
+        <div class="section-pills" role="tablist">
+          <button class="pill-btn active" data-cat="CAT 1" role="tab" aria-selected="true">
+            <span class="pill-dot cat1-dot"></span>
+            <span class="pill-title">CAT 1</span>
+            <span class="pill-count" id="count-cat1">260</span>
+          </button>
+          <button class="pill-btn" data-cat="CAT 2" role="tab" aria-selected="false">
+            <span class="pill-dot cat2-dot"></span>
+            <span class="pill-title">CAT 2</span>
+            <span class="pill-count" id="count-cat2">180</span>
+          </button>
+          <button class="pill-btn" data-cat="CAT 3" role="tab" aria-selected="false">
+            <span class="pill-dot cat3-dot"></span>
+            <span class="pill-title">CAT 3</span>
+            <span class="pill-count" id="count-cat3">260</span>
+          </button>
+          <button class="pill-btn" data-cat="ALL" role="tab" aria-selected="false">
+            <span class="pill-dot all-dot"></span>
+            <span class="pill-title">All Sections</span>
+            <span class="pill-count" id="count-all">700</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Sound toggle -->
+        <button id="sound-btn" class="icon-btn" title="Toggle Sound Feedback">
+          <svg class="sound-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <svg class="sound-off hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+            <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path>
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          </svg>
+        </button>
+
+        <!-- Theme toggle -->
+        <button id="theme-btn" class="icon-btn" title="Toggle Light/Dark Theme">
+          <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg class="sun-icon hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+
+        <!-- Restart Button -->
+        <button id="restart-top-btn" class="action-btn danger-outline" title="Restart Quiz">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+          </svg>
+          <span>Restart</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Sub-bar: Filters, Progress & Stats -->
+    <div class="sub-bar">
+      <div class="filter-controls">
+        <!-- Topic Select -->
+        <div class="select-wrapper">
+          <label for="topic-filter">Topic:</label>
+          <select id="topic-filter">
+            <option value="ALL">All Topics in Section</option>
+          </select>
+        </div>
+
+        <!-- Mode Select -->
+        <div class="mode-pills">
+          <button class="mode-pill active" data-mode="all">All</button>
+          <button class="mode-pill" data-mode="unanswered" title="Show only unanswered">Unanswered</button>
+          <button class="mode-pill" data-mode="mistakes" title="Review questions you got wrong">Mistakes (<span id="mistakes-count">0</span>)</button>
+          <button class="mode-pill" data-mode="bookmarked" title="View bookmarked questions">Saved (<span id="bookmarked-count">0</span>)</button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="search-input" placeholder="Search keywords..." />
+          <button id="clear-search" class="clear-btn hidden">&times;</button>
+        </div>
+      </div>
+
+      <!-- Live Score & Accuracy Tracker -->
+      <div class="score-tracker">
+        <div class="score-card">
+          <span class="score-label">Answered</span>
+          <span class="score-value" id="stat-answered">0 / 260</span>
+        </div>
+        <div class="score-card correct-card">
+          <span class="score-label">Correct</span>
+          <span class="score-value" id="stat-correct">0</span>
+        </div>
+        <div class="score-card wrong-card">
+          <span class="score-label">Wrong</span>
+          <span class="score-value" id="stat-wrong">0</span>
+        </div>
+        <div class="score-card accuracy-card">
+          <span class="score-label">Accuracy</span>
+          <span class="score-value" id="stat-accuracy">0%</span>
+        </div>
+        <button id="grid-toggle-btn" class="icon-btn" title="Toggle Question Matrix / Grid">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="quiz-progress-bar" style="width: 0%;"></div>
+    </div>
+
+    <!-- Main Workspace Layout -->
+    <main class="main-content">
+      <!-- Question Card Area -->
+      <section class="question-section">
+        <div class="question-card" id="question-card">
+          <!-- Card Header -->
+          <div class="q-header">
+            <div class="q-meta">
+              <span class="badge cat-badge" id="q-cat-badge">CAT 1</span>
+              <span class="badge topic-badge" id="q-topic-badge">Java Introduction</span>
+              <span class="q-num-label" id="q-num-label">Question 1 of 260</span>
+            </div>
+            <div class="q-actions">
+              <button id="bookmark-btn" class="icon-btn bookmark-btn" title="Bookmark for review">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Question Body -->
+          <div class="q-body">
+            <h2 class="q-text" id="q-text">Loading question...</h2>
+          </div>
+
+          <!-- Options Grid -->
+          <div class="options-container" id="options-container" role="radiogroup">
+            <!-- Dynamically injected options A, B, C, D -->
+          </div>
+
+          <!-- Immediate Feedback & Explanation Card (Shown after answering) -->
+          <div class="feedback-card hidden" id="feedback-card">
+            <div class="feedback-header" id="feedback-header">
+              <div class="feedback-icon" id="feedback-icon"></div>
+              <div class="feedback-status" id="feedback-status">Correct Answer!</div>
+            </div>
+            <div class="feedback-body">
+              <div class="correct-answer-pill" id="correct-answer-pill">
+                Correct Answer: <strong id="feedback-correct-opt">Option B</strong>
+              </div>
+              <div class="explanation-box" id="explanation-box">
+                <span class="exp-title">Explanation & Context:</span>
+                <p id="feedback-explanation">Explanation text goes here.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Question Footer Navigation -->
+          <div class="q-footer">
+            <div class="footer-left">
+              <button id="prev-btn" class="nav-btn secondary-btn" disabled>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Previous</span>
+              </button>
+              <button id="shuffle-btn" class="action-btn-sm" title="Shuffle current questions">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="16 3 21 3 21 8"></polyline>
+                  <line x1="4" y1="20" x2="21" y2="3"></line>
+                  <polyline points="21 16 21 21 16 21"></polyline>
+                  <line x1="15" y1="15" x2="21" y2="21"></line>
+                  <line x1="4" y1="4" x2="9" y2="9"></line>
+                </svg>
+                <span>Shuffle</span>
+              </button>
+            </div>
+
+            <div class="keyboard-hints">
+              <span class="hint-tag">Keys:</span>
+              <kbd>A</kbd><kbd>B</kbd><kbd>C</kbd><kbd>D</kbd> or <kbd>1-4</kbd> select • <kbd>&larr;</kbd><kbd>&rarr;</kbd> navigate
+            </div>
+
+            <div class="footer-right">
+              <button id="next-btn" class="nav-btn primary-btn">
+                <span>Next</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Completion Modal / View (Shown when finished or via Review) -->
+        <div class="completion-view hidden" id="completion-view">
+          <div class="completion-card">
+            <div class="trophy-wrapper">
+              <div class="trophy-badge">🏆</div>
+            </div>
+            <h2 class="completion-title">Section Completed!</h2>
+            <p class="completion-subtitle" id="completion-subtitle">You have completed all questions in CAT 1.</p>
+
+            <div class="final-stats-grid">
+              <div class="final-stat-box">
+                <span class="f-num" id="f-total">260</span>
+                <span class="f-lbl">Total Questions</span>
+              </div>
+              <div class="final-stat-box stat-correct">
+                <span class="f-num" id="f-correct">0</span>
+                <span class="f-lbl">Correct</span>
+              </div>
+              <div class="final-stat-box stat-wrong">
+                <span class="f-num" id="f-wrong">0</span>
+                <span class="f-lbl">Wrong</span>
+              </div>
+              <div class="final-stat-box stat-acc">
+                <span class="f-num" id="f-accuracy">0%</span>
+                <span class="f-lbl">Final Score</span>
+              </div>
+            </div>
+
+            <div class="completion-actions">
+              <button id="review-mistakes-btn" class="action-btn warning-btn">
+                <span>Review Mistakes</span>
+              </button>
+              <button id="restart-section-btn" class="action-btn danger-btn">
+                <span>Restart Section</span>
+              </button>
+              <button id="continue-next-cat-btn" class="action-btn primary-btn">
+                <span>Next Section &rarr;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Side Matrix / Drawer -->
+      <aside class="matrix-drawer" id="matrix-drawer">
+        <div class="matrix-header">
+          <h3>Question Palette</h3>
+          <span class="matrix-count" id="matrix-count">260 Questions</span>
+          <button id="close-drawer-btn" class="icon-btn-sm">&times;</button>
+        </div>
+
+        <div class="palette-legend">
+          <div class="legend-item"><span class="legend-dot dot-correct"></span> Correct</div>
+          <div class="legend-item"><span class="legend-dot dot-wrong"></span> Wrong</div>
+          <div class="legend-item"><span class="legend-dot dot-current"></span> Current</div>
+          <div class="legend-item"><span class="legend-dot dot-unanswered"></span> Unanswered</div>
+        </div>
+
+        <div class="palette-grid" id="palette-grid">
+          <!-- Injected dynamically -->
+        </div>
+
+        <div class="palette-footer">
+          <button id="restart-all-btn" class="action-btn-block danger-outline">
+            Restart All Progress
+          </button>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Restart Confirmation Modal -->
+    <div class="modal-backdrop hidden" id="restart-modal">
+      <div class="modal-card">
+        <div class="modal-icon">⚠️</div>
+        <h3>Restart Quiz?</h3>
+        <p id="restart-modal-msg">Are you sure you want to reset your answers and restart this section from question 1?</p>
+        <div class="modal-buttons">
+          <button id="cancel-restart-btn" class="action-btn secondary-btn">Cancel</button>
+          <button id="confirm-restart-btn" class="action-btn danger-btn">Yes, Restart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load Questions Data -->
+  <script src="questions.js"></script>
+  <!-- Load App Controller -->
+  <script src="app.js"></script>
+</body>
+</html>
+
