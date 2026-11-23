@@ -13,6 +13,8 @@
     currentIndex: 0,
     userAnswers: {},   // { [questionId]: { selected: 'A', isCorrect: true, timestamp: Date.now() } }
     bookmarks: new Set(),
+    revealedAnswers: new Set(),
+    studyMode: false,
     soundEnabled: true,
     theme: 'dark'
   };
@@ -91,6 +93,12 @@
     paletteGrid: document.getElementById('palette-grid'),
     matrixCount: document.getElementById('matrix-count'),
     
+    // Mode & Study Switches
+    studyModeBtn: document.getElementById('study-mode-btn'),
+    studyModeStatus: document.getElementById('study-mode-status'),
+    showAnswerBtn: document.getElementById('show-answer-btn'),
+    showAnswerLabel: document.getElementById('show-answer-label'),
+
     // Stats
     statAnswered: document.getElementById('stat-answered'),
     statCorrect: document.getElementById('stat-correct'),
@@ -145,6 +153,7 @@
       localStorage.setItem('quiz_bookmarks', JSON.stringify([...state.bookmarks]));
       localStorage.setItem('quiz_theme', state.theme);
       localStorage.setItem('quiz_sound', state.soundEnabled ? 'true' : 'false');
+      localStorage.setItem('quiz_study_mode', state.studyMode ? 'true' : 'false');
     } catch (e) {
       console.warn('Storage save failed:', e);
     }
@@ -169,8 +178,25 @@
         state.soundEnabled = savedSound === 'true';
         updateSoundUI();
       }
+
+      const savedStudyMode = localStorage.getItem('quiz_study_mode');
+      if (savedStudyMode !== null) {
+        state.studyMode = savedStudyMode === 'true';
+        updateStudyModeUI();
+      }
     } catch (e) {
       console.warn('Storage load failed:', e);
+    }
+  }
+
+  function updateStudyModeUI() {
+    if (!DOM.studyModeBtn || !DOM.studyModeStatus) return;
+    if (state.studyMode) {
+      DOM.studyModeBtn.classList.add('active');
+      DOM.studyModeStatus.textContent = 'ON';
+    } else {
+      DOM.studyModeBtn.classList.remove('active');
+      DOM.studyModeStatus.textContent = 'OFF';
     }
   }
 
@@ -335,6 +361,7 @@
 
     const q = list[state.currentIndex];
     const userAns = state.userAnswers[q.id];
+    const isAnswerRevealed = state.studyMode || state.revealedAnswers.has(q.id) || !!userAns;
 
     DOM.questionCard.classList.remove('hidden');
     DOM.completionView.classList.add('hidden');
@@ -354,6 +381,25 @@
       DOM.bookmarkBtn.classList.add('active');
     } else {
       DOM.bookmarkBtn.classList.remove('active');
+    }
+
+    // Show/Hide Answer Button Status
+    if (DOM.showAnswerBtn && DOM.showAnswerLabel) {
+      if (isAnswerRevealed) {
+        DOM.showAnswerBtn.classList.add('revealed');
+        DOM.showAnswerLabel.textContent = 'Hide Answer';
+        const eyeOpen = DOM.showAnswerBtn.querySelector('.eye-open');
+        const eyeClosed = DOM.showAnswerBtn.querySelector('.eye-closed');
+        if (eyeOpen) eyeOpen.classList.add('hidden');
+        if (eyeClosed) eyeClosed.classList.remove('hidden');
+      } else {
+        DOM.showAnswerBtn.classList.remove('revealed');
+        DOM.showAnswerLabel.textContent = 'Show Answer';
+        const eyeOpen = DOM.showAnswerBtn.querySelector('.eye-open');
+        const eyeClosed = DOM.showAnswerBtn.querySelector('.eye-closed');
+        if (eyeOpen) eyeOpen.classList.remove('hidden');
+        if (eyeClosed) eyeClosed.classList.add('hidden');
+      }
     }
 
     // Question Text
@@ -382,19 +428,22 @@
         } else {
           btn.classList.add('dimmed');
         }
+      } else if (isAnswerRevealed && isCorrectKey) {
+        btn.classList.add('revealed');
       }
 
       btn.innerHTML = `
         <span class="option-key">${key}</span>
         <span class="option-text">${formatContent(optText)}</span>
-        <span class="option-indicator">${isCorrectKey ? '✓' : (isUserChoice ? '✗' : '')}</span>
+        ${userAns ? `<span class="option-indicator">${isCorrectKey ? '✓' : (isUserChoice ? '✗' : '')}</span>` : ''}
+        ${!userAns && isAnswerRevealed && isCorrectKey ? `<span class="revealed-badge">✓ Correct Answer</span>` : ''}
       `;
 
       btn.addEventListener('click', () => handleSelectOption(key));
       DOM.optionsContainer.appendChild(btn);
     });
 
-    // Immediate Feedback Card
+    // Immediate Feedback & Explanation Card
     if (userAns) {
       DOM.feedbackCard.classList.remove('hidden');
       const isCorrect = userAns.isCorrect;
@@ -404,6 +453,12 @@
         ? '✓ Excellent! Correct Answer'
         : '✗ Incorrect Answer';
 
+      DOM.feedbackCorrectOpt.textContent = `Option ${q.answer}: "${q.options[q.answer]}"`;
+      DOM.feedbackExplanation.innerHTML = formatContent(q.explanation || 'No explanation provided.');
+    } else if (isAnswerRevealed) {
+      DOM.feedbackCard.classList.remove('hidden');
+      DOM.feedbackHeader.className = 'feedback-header status-correct';
+      DOM.feedbackStatus.innerHTML = '💡 Memory / Study Mode: Answer Revealed';
       DOM.feedbackCorrectOpt.textContent = `Option ${q.answer}: "${q.options[q.answer]}"`;
       DOM.feedbackExplanation.innerHTML = formatContent(q.explanation || 'No explanation provided.');
     } else {
@@ -560,6 +615,7 @@
       state.userAnswers = {};
     }
 
+    state.revealedAnswers.clear();
     state.currentIndex = 0;
     saveStorage();
     DOM.restartModal.classList.add('hidden');
@@ -572,6 +628,34 @@
 
   // Event Listeners
   function setupEventListeners() {
+    // Memory / Study Mode Button
+    if (DOM.studyModeBtn) {
+      DOM.studyModeBtn.addEventListener('click', () => {
+        state.studyMode = !state.studyMode;
+        updateStudyModeUI();
+        saveStorage();
+        playTone('click');
+        renderCurrentQuestion();
+      });
+    }
+
+    // Single Question Show Answer Toggle Button
+    if (DOM.showAnswerBtn) {
+      DOM.showAnswerBtn.addEventListener('click', () => {
+        const list = state.filteredQuestions;
+        if (list.length === 0) return;
+        const q = list[state.currentIndex];
+
+        if (state.revealedAnswers.has(q.id)) {
+          state.revealedAnswers.delete(q.id);
+        } else {
+          state.revealedAnswers.add(q.id);
+        }
+        playTone('click');
+        renderCurrentQuestion();
+      });
+    }
+
     // Section Pills
     DOM.sectionPills.forEach(pill => {
       pill.addEventListener('click', () => {
@@ -748,7 +832,11 @@
       if (document.activeElement === DOM.searchInput) return;
 
       const key = e.key.toUpperCase();
-      if (['1', 'A'].includes(key)) {
+      if (key === 'S') {
+        if (DOM.showAnswerBtn) DOM.showAnswerBtn.click();
+      } else if (key === 'M') {
+        if (DOM.studyModeBtn) DOM.studyModeBtn.click();
+      } else if (['1', 'A'].includes(key)) {
         handleSelectOption('A');
       } else if (['2', 'B'].includes(key)) {
         handleSelectOption('B');
@@ -781,6 +869,14 @@
     }
 
     loadStorage();
+
+    // Check URL parameters (e.g. ?study=1 or ?memory=1)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('study') === '1' || urlParams.get('memory') === '1') {
+      state.studyMode = true;
+      updateStudyModeUI();
+    }
+
     setupEventListeners();
     updateTopicsDropdown();
     applyFilters();

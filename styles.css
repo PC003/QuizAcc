@@ -410,6 +410,62 @@ body.light-theme .pill-count {
   color: white;
 }
 
+.toggle-switch-btn {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 5px 12px;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.toggle-switch-btn:hover {
+  color: var(--text-main);
+  background: var(--bg-card-hover);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.toggle-switch-btn.active {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: var(--success);
+  color: var(--success);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+}
+
+.answer-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.answer-toggle-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-main);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.answer-toggle-btn.revealed {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: var(--accent-primary);
+  color: #38bdf8;
+}
+
 .search-box {
   position: relative;
   display: flex;
@@ -679,6 +735,34 @@ body.light-theme .explanation-box code {
 }
 
 /* Instant Feedback Option States */
+.option-btn.revealed {
+  background: rgba(16, 185, 129, 0.08) !important;
+  border-color: #10b981 !important;
+  color: #a7f3d0 !important;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+}
+body.light-theme .option-btn.revealed {
+  color: #065f46 !important;
+}
+.option-btn.revealed .option-key {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+}
+.revealed-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--success);
+  background: rgba(16, 185, 129, 0.15);
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-left: auto;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
 .option-btn.correct {
   background: var(--success-bg) !important;
   border-color: var(--success) !important;

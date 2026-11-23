@@ -69,6 +69,10 @@ Then visit: **[http://localhost:8088](http://localhost:8088)**
 
 ## ✨ Features
 
+- **Memory & Study Mode (Always Show Answers)**:
+  - Toggle **`🧠 Memory Mode: ON/OFF`** in the sub-bar (or press <kbd>M</kbd>) to automatically display the correct answer and detailed explanation for every question as you navigate through them — ideal for rapid memorization and exam revision!
+- **On-Demand "Show Answer" Button**:
+  - Each question card features an eye icon **`Show Answer`** button (or press <kbd>S</kbd>) that reveals the correct option badge and explanation card on demand while solving.
 - **Instant Visual Feedback**: Options turn green with a checkmark upon correct answers, or red upon wrong answers while highlighting the true answer.
 - **Detailed Explanations**: Immediately reveals the reasoning, underlying formulas, and algorithmic logic after answering each question.
 - **Restart Quiz Anytime**:

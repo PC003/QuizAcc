@@ -115,6 +115,12 @@
           <button class="mode-pill" data-mode="bookmarked" title="View bookmarked questions">Saved (<span id="bookmarked-count">0</span>)</button>
         </div>
 
+        <!-- Memory / Study Mode Toggle -->
+        <button id="study-mode-btn" class="toggle-switch-btn" title="Toggle Auto-Show Answers for Memorization (Shortcut: M)">
+          <span class="switch-icon">🧠</span>
+          <span class="switch-label">Memory Mode: <strong id="study-mode-status">OFF</strong></span>
+        </button>
+
         <!-- Search Bar -->
         <div class="search-box">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -173,6 +179,17 @@
               <span class="q-num-label" id="q-num-label">Question 1 of 260</span>
             </div>
             <div class="q-actions">
+              <button id="show-answer-btn" class="action-btn-sm answer-toggle-btn" title="Reveal/Hide Correct Answer while solving (Shortcut: S)">
+                <svg class="eye-open" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg class="eye-closed hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+                <span id="show-answer-label">Show Answer</span>
+              </button>
               <button id="bookmark-btn" class="icon-btn bookmark-btn" title="Bookmark for review">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
@@ -231,7 +248,7 @@
 
             <div class="keyboard-hints">
               <span class="hint-tag">Keys:</span>
-              <kbd>A</kbd><kbd>B</kbd><kbd>C</kbd><kbd>D</kbd> or <kbd>1-4</kbd> select • <kbd>&larr;</kbd><kbd>&rarr;</kbd> navigate
+              <kbd>A</kbd><kbd>B</kbd><kbd>C</kbd><kbd>D</kbd> select • <kbd>S</kbd> show answer • <kbd>M</kbd> memory mode • <kbd>&larr;</kbd><kbd>&rarr;</kbd> navigate
             </div>
 
             <div class="footer-right">
